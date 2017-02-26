@@ -7,7 +7,7 @@
     "dev": "webpack-dev-server --config ui/webpack/webpack-dev.config.js --watch --colors",
     "postinstall": "webpack --config ./ui/webpack/webpack-prod.config.js",
     "build": "rm -rf dist && webpack --config ./ui/webpack/webpack-prod.config.js --colors",
-    "start": "node ./index.js",
+    "start": "nodemon ./api/server.js",
     "test": "mocha --compilers js:babel-core/register --require ./test/test_helper.js --recursive ./test",
     "test:watch": "npm run test -- --watch",
     "lint": "eslint src test webpack"
