@@ -30,7 +30,7 @@ class App extends React.Component {
           </Navbar>
           */}
         </header>
-        <section className='content-body'>
+        <section className="container-fluid">
           {this.props.children ? React.cloneElement(this.props.children, {}) 
           : 
           (

@@ -12,12 +12,14 @@ class ChatRoom extends React.Component {
   }
   render() {
     return(
-      <div className="row">
-        <div>
+      <div className='row'>
+        <div className='col-md-8'>
           {/*code sharing space*/}
+          code
         </div>
-        <div>
+        <div className='col-md-4'>
           {/*chat space*/}
+          chat
         </div>
       </div>
     );
