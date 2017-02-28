@@ -4,9 +4,9 @@ import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import { syncHistoryWithStore } from 'react-router-redux';
 import { Router, Route, browserHistory, IndexRoute} from 'react-router';
-import rootReducer from '../../reducers/index.js';
-import App from '../app/App.jsx';
-import ChatRoom from '../chatroom/chatroom.jsx';
+import rootReducer from './reducers/index.js';
+import App from './components/app/App.jsx';
+import ChatRoom from './components/chatroom/chatroom.jsx';
 
 const store = createStore(rootReducer, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 const history = syncHistoryWithStore(browserHistory, store);
