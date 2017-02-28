@@ -1,4 +1,5 @@
 import React from 'react';
+import { Navbar, Nav, NavItem } from 'react-bootstrap';
 
 class App extends React.Component {
   constructor() {
@@ -14,8 +15,31 @@ class App extends React.Component {
   }
 
   render() {
+    console.log(this.props.children)
     return (
-      <div>Hello World</div>
+      <div>
+        <header>
+          {/*
+          <Navbar>
+            <Navbar.brand>
+              <a href='/'>PatterBox</a>
+            </Navbar.brand>
+            <Nav>
+              <NavItem eventKey={1} href="/chatroom">ChatRoom</NavItem>
+            </Nav>
+          </Navbar>
+          */}
+        </header>
+        <section className="container-fluid">
+          {this.props.children ? React.cloneElement(this.props.children, {}) 
+          : 
+          (
+            <div>
+              Welcome Page
+            </div>
+          )}
+        </section>
+      </div>
     );
   }
 
