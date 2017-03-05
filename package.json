@@ -4,7 +4,7 @@
   "description": "An app to chat with friends.",
   "main": "api/server.js",
   "scripts": {
-    "dev": "webpack-dev-server --config ui/webpack/webpack-dev.config.js --watch --colors",
+    "dev": "npm link telfone && webpack-dev-server --config ui/webpack/webpack-dev.config.js --watch --colors",
     "postinstall": "webpack --config ./ui/webpack/webpack-prod.config.js",
     "build": "rm -rf dist && webpack --config ./ui/webpack/webpack-prod.config.js --colors",
     "start": "nodemon ./api/server.js",
