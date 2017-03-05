@@ -1,9 +1,9 @@
 /**
  * The Telfone RESTful socket
  * 
- * const Telfone = new Telfone('ws://localhost:3000/);
+ * const Telfone = new Telfone('ws://localhost:5000/);
  * 
- * Telfone.get('localhost:300/api/initialData')
+ * Telfone.get('localhost:5000/api/initialData')
  *  .on('connect')
  *  .then((data) =>{
  *    // DO SOMETHING WITH THE RETURNED DATA
