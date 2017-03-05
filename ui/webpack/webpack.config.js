@@ -6,7 +6,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const paths = {
   APP_DIR: Path.join(__dirname, '../app'),
   BUILD_DIR: Path.join(__dirname, '../public'),
-  ENTRY_POINT: Path.join(__dirname, '../app/components/routing/index.jsx'),
+  ENTRY_POINT: Path.join(__dirname, '../app/routing/index.jsx'),
   INDEX_HTML: Path.join(__dirname, '../public/index.html')
 };
 
