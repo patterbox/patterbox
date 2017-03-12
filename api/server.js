@@ -1,14 +1,19 @@
 'use strict';
 
-const express = require('express');
-const app = express();
+const express = require('express'),
+      app = express();
 
 const routes = require('./routing/routes.js');
 
-app.set('port', 3000);
+app.set('port', 5000);
 
 routes(app);
 
-app.listen(app.get('port'), () =>{
-  console.log('patterbox chattin away on :3000');
+const server = app.listen(app.get('port'), () =>{
+  console.log('patterbox chattin away on :5000');
 });
+
+module.exports = server;
+
+ require('./socket/index');
+

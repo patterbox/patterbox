@@ -4,7 +4,7 @@
   "description": "An app to chat with friends.",
   "main": "api/server.js",
   "scripts": {
-    "dev": "webpack-dev-server --config ui/webpack/webpack-dev.config.js --watch --colors",
+    "dev": "npm link telfone && webpack-dev-server --config ui/webpack/webpack-dev.config.js --watch --colors",
     "postinstall": "webpack --config ./ui/webpack/webpack-prod.config.js",
     "build": "rm -rf dist && webpack --config ./ui/webpack/webpack-prod.config.js --colors",
     "start": "nodemon ./api/server.js",
@@ -82,6 +82,7 @@
     "semantic-ui-react": "^0.64.0",
     "style-loader": "^0.13.1",
     "url-loader": "^0.5.7",
-    "webpack-dev-server": "^1.16.2"
+    "webpack-dev-server": "^1.16.2",
+    "websocket": "^1.0.24"
   }
 }

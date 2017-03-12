@@ -4,12 +4,24 @@ import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import { syncHistoryWithStore } from 'react-router-redux';
 import { Router, Route, browserHistory, IndexRoute} from 'react-router';
-import rootReducer from './reducers/index.js';
-import App from './components/app/App.jsx';
-import ChatRoom from './components/chatroom/chatroom.jsx';
+import rootReducer from '../reducers/index.js';
+import App from '../components/app/App.jsx';
+import ChatRoom from '../components/chatroom/chatroom.jsx';
+import Telfone from 'telfone';
 
 const store = createStore(rootReducer, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 const history = syncHistoryWithStore(browserHistory, store);
+
+const telfone = new Telfone('ws://localhost:5000/')
+
+telfone.get('http://localhost:5000/api/test')
+  .on('message', (fetch) =>{
+    console.log('hellooo')
+    fetch.then((data) =>{
+      console.log(data)
+    });
+  });
+
 
 render((
   <Provider store={store}>
