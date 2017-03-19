@@ -11,14 +11,9 @@ module.exports = (app) =>{
     res.setHeader('Access-Control-Allow-Credentials', true);
     next();
   });
-
-  app.get('/api/test', (req, res) =>{
-    console.log('my routes GET')
-    res.send(JSON.stringify({json: 'good job'}));
-  });
-
-  app.post('/api/test2', (req, res) =>{
-    console.log('my routes POST',req.body)
-    res.send(JSON.stringify({json: 'good job'}));
+  
+  app.get('/api/test3', (req, res) =>{
+    console.log('my routes GET3');
+    res.send('okay')
   });
 };

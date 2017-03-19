@@ -14,18 +14,11 @@ const history = syncHistoryWithStore(browserHistory, store);
 
 const telfone = new Telfone('ws://localhost:5000/');
 
-const telfone2 = new Telfone('ws://localhost:5000/');
-
-telfone.get('http://localhost:5000/api/test')
+telfone.get('http://localhost:5000/api/test3')
+  .get('http://localhost:5000/api/test3')
   .on('message')
   .then((fetch) =>{
-    console.log("GET",fetch)
-  }).catch(console.log);
-
-telfone2.post('http://localhost:5000/api/test2')
-  .on('message')
-  .then((fetch) =>{
-    console.log("POST",fetch)
+    console.log("RESPONSES",fetch)
   }).catch(console.log);
 
 render((

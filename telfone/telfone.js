@@ -17,12 +17,15 @@ class Telfone {
       ._openSocket();
   }
 
+  __reset__() {
+    delete this._requestURL;
+    delete this._requestObject;
+  }
+
   _init(socketURL) {
     this._setSocketURL = socketURL;
     this._setSocket = new WebSocket(this._socketURL, 'echo-protocol');
-    this._setRequestURL = null;
-    this._setRequestObject = null;
-    
+    this.__requests__ = {};
 
     return this;
   }
@@ -40,21 +43,29 @@ class Telfone {
   }
 
   set _setRequestURL(url) {
-    this._requestURL = url;
-    
+    if (this._requestURL) {
+      this._requestURL = Array.isArray(this._requestURL) ? this._requestURL : [this._requestURL];
+
+      this._requestURL.push(url);
+    } else {
+      this._requestURL = [url];
+    }
+
     return null;
   }
 
   set _setRequestObject(requestObject) {
     try {
-      this._requestObject = { 
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-        method: "POST",
-        data: JSON.stringify(requestObject) 
-      };
+      this._requestObject = [
+        { 
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          method: "POST",
+          data: JSON.stringify(requestObject) 
+        }
+      ];
     } catch(e) {
       console.log(e);
     }
@@ -62,17 +73,25 @@ class Telfone {
     return null;
   }
 
-  get _getRequestURL() {
+  get _getRequestURLs() {
     return this._requestURL;
   }
 
-  get _getRequestObject() {
+  get _getRequestObjects() {
     return this._requestObject;
   }
 
-  get _getFetch() {
+  _getFetch(message) {
+    const request = this.__requests__[message];
+    const urls = request.url;
+    const requestObjects = request.requestObject;
+
     try {
-      return !this._requestObject ? fetch(this._requestURL) : fetch(this._getRequestURL, this._getRequestObject);
+      const requests = urls.map((url, index) =>{
+        return requestObjects[index] ? fetch(url, requestObjects[index]) : fetch(url);
+      });
+      
+      return Promise.all(requests);
     } catch(e) {
       console.log(e);
     }
@@ -107,8 +126,10 @@ class Telfone {
     return this;
   }
 
-  get(url) {
+  get(url, requestObject) {
     this._setRequestURL = url;
+    this._setRequestObject = requestObject ? requestObject : null;
+
     return this;
   }
 
@@ -118,11 +139,18 @@ class Telfone {
     return this;
   }
 
-  on() {
+  on(message) {
+    this.__requests__[message] = {
+      url: this._getRequestURLs,
+      requestObject: this._getRequestObjects
+    }
+
+    this.__reset__();
+
     return new Promise ((resolve, reject) =>{
       this._socket.onmessage = (event) =>{
         console.log('MESSAGE:',event);
-        resolve(this._getFetch);
+        resolve(this._getFetch(message));
       };
     });
   }
