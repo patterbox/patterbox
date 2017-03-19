@@ -16,7 +16,7 @@ const telfone = new Telfone('ws://localhost:5000/');
 
 telfone.get('http://localhost:5000/api/test3')
   .get('http://localhost:5000/api/test3')
-  .on('message')
+  .on('init')
   .then((fetch) =>{
     console.log("RESPONSES",fetch)
   }).catch(console.log);

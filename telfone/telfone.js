@@ -149,8 +149,8 @@ class Telfone {
 
     return new Promise ((resolve, reject) =>{
       this._socket.onmessage = (event) =>{
-        console.log('MESSAGE:',event);
-        resolve(this._getFetch(message));
+        const serverMessage = JSON.parse(event.data).message;
+        resolve(this._getFetch(serverMessage));
       };
     });
   }
