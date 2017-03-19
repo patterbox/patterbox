@@ -20,6 +20,8 @@ class Telfone {
   __reset__() {
     delete this._requestURL;
     delete this._requestObject;
+
+    return null;
   }
 
   _init(socketURL) {
@@ -43,9 +45,7 @@ class Telfone {
   }
 
   set _setRequestURL(url) {
-    if (this._requestURL) {
-      this._requestURL = Array.isArray(this._requestURL) ? this._requestURL : [this._requestURL];
-
+    if (Array.isArray(this._requestURL)) {
       this._requestURL.push(url);
     } else {
       this._requestURL = [url];
@@ -99,6 +99,8 @@ class Telfone {
     } catch(e) {
       console.log(e);
     }
+
+    return this;
   }
 
   _openSocket() {
@@ -140,6 +142,7 @@ class Telfone {
   post(url, requestData) {
     this._setRequestURL = url;
     this._setRequestObject = requestData;
+    
     return this;
   }
 
