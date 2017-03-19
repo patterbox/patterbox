@@ -24,7 +24,7 @@ class Telfone {
 
   _init(socketURL) {
     this._setSocketURL = socketURL;
-    this._setSocket = new WebSocket(this._socketURL, 'echo-protocol');
+    this._setSocket = new WebSocket(this._getSocketURL, 'echo-protocol');
     this.__requests__ = {};
 
     return this;
@@ -71,6 +71,10 @@ class Telfone {
     }
 
     return null;
+  }
+
+  get _getSocketURL() {
+    return this._socketURL;
   }
 
   get _getRequestURLs() {
