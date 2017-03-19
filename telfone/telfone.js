@@ -12,85 +12,121 @@
  */
 
 class Telfone {
-  constructor(socketUrl) {
-    this._url = socketUrl;
-    this._socket = new WebSocket(this._url, 'echo-protocol');
-
-    this._init();
+  constructor(socketURL) {
+    this._init(socketURL)
+      ._openSocket();
   }
 
-  _init() {
-    this._openSocket();
+  _init(socketURL) {
+    this._setSocketURL = socketURL;
+    this._setSocket = new WebSocket(this._socketURL, 'echo-protocol');
+    this._setRequestURL = null;
+    this._setRequestObject = null;
+    
+
+    return this;
+  }
+
+  set _setSocketURL(socketURL) {
+    this._socketURL = socketURL;
+
+    return null;
+  }
+
+  set _setSocket(socket) {
+    this._socket = socket;
+
+    return null;
+  }
+
+  set _setRequestURL(url) {
+    this._requestURL = url;
+    
+    return null;
+  }
+
+  set _setRequestObject(requestObject) {
+    try {
+      this._requestObject = { 
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        method: "POST",
+        data: JSON.stringify(requestObject) 
+      };
+    } catch(e) {
+      console.log(e);
+    }
+
+    return null;
+  }
+
+  get _getRequestURL() {
+    return this._requestURL;
+  }
+
+  get _getRequestObject() {
+    return this._requestObject;
+  }
+
+  get _getFetch() {
+    try {
+      return !this._requestObject ? fetch(this._requestURL) : fetch(this._getRequestURL, this._getRequestObject);
+    } catch(e) {
+      console.log(e);
+    }
   }
 
   _openSocket() {
-    this._socket.onerror = () =>{
-      console.log('Connection Error');
-    };
+    try {
+      this._socket.onerror = () =>{
+        console.log('Connection Error');
+      };
 
-    this._socket.onopen = (event) =>{
-      console.log('WebSocket Client Connected', event);
+      this._socket.onopen = (event) =>{
+        console.log('WebSocket Client Connected', event);
 
-      const sendNumber = () =>{
-        if(this._socket.readyState === this._socket.OPEN) {
-          var number = Math.round(Math.random() * 0xFFFFFF);
-          this._socket.send(number.toString());
+        const sendNumber = () =>{
+          if(this._socket.readyState === this._socket.OPEN) {
+            var number = Math.round(Math.random() * 0xFFFFFF);
+            this._socket.send(number.toString());
+          }
         }
-      }
 
-      sendNumber();
-    };
+        sendNumber();
+      };
 
-    this._socket.onclose = () =>{
-      console.log('echo-protocol Client Closed');
-    };
-
+      this._socket.onclose = () =>{
+        console.log('echo-protocol Client Closed');
+      };
+    } catch(e) {
+      console.log(e);
+    }
     
     return this;
   }
 
-  on(cb) {
-    this._socket.onMessage = (event) =>{
-      console.log('MESSAGE:',event);
-      cb(this._fetch());
-    };
-  }
-
   get(url) {
-    this._fetch = fetch.bind(this, url);
-
+    this._setRequestURL = url;
     return this;
   }
 
   post(url, requestData) {
-    this._fetch = fetch.bind(this, url, { 
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      method: "POST",
-      data: JSON.stringify(requestData) 
-    });
-
+    this._setRequestURL = url;
+    this._setRequestObject = requestData;
     return this;
+  }
+
+  on() {
+    return new Promise ((resolve, reject) =>{
+      this._socket.onmessage = (event) =>{
+        console.log('MESSAGE:',event);
+        resolve(this._getFetch);
+      };
+    });
   }
   
 }
-
-const constants = {
-  HEADERS: {
-    GET: 'GET',
-    POST: 'POST',
-    PUT: 'PUT',
-    DELETE: 'DELETE'
-  },
-  ERROR_MSGS: {
-    INVALID_URL: 'INVALID URL, USE ABSOLUTE URL'
-  },
-  REGEX: {
-    absUrls : /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/i,
-    relUrls: /[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/i
-  }
-};
 
 module.exports = Telfone;

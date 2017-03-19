@@ -5,6 +5,7 @@ npm-debug.log*
 
 # Build
 ui/public/dist
+ui/public/public
 
 # Runtime data
 pids

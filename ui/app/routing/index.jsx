@@ -12,16 +12,21 @@ import Telfone from 'telfone';
 const store = createStore(rootReducer, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 const history = syncHistoryWithStore(browserHistory, store);
 
-const telfone = new Telfone('ws://localhost:5000/')
+const telfone = new Telfone('ws://localhost:5000/');
+
+const telfone2 = new Telfone('ws://localhost:5000/');
 
 telfone.get('http://localhost:5000/api/test')
-  .on('message', (fetch) =>{
-    console.log('hellooo')
-    fetch.then((data) =>{
-      console.log(data)
-    });
-  });
+  .on('message')
+  .then((fetch) =>{
+    console.log("GET",fetch)
+  }).catch(console.log);
 
+telfone2.post('http://localhost:5000/api/test2')
+  .on('message')
+  .then((fetch) =>{
+    console.log("POST",fetch)
+  }).catch(console.log);
 
 render((
   <Provider store={store}>
