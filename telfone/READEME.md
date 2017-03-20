@@ -8,17 +8,19 @@ restufl response to a websocket event listener.
 
 1. Install Telfone:
 
-`
+```
 npm install -save telfone
-`
+```
 
 2. Import Telfone: 
 
-`import Telfone from 'telfone'`
+```
+import Telfone from 'telfone'
+```
 
 3. Use Telfone:
 
-`
+```
 const restSocket = new Telfone('ws://localhost/', onopen, onclose, onerror);
 
 restSocket.get('localhost/api/initialData')
@@ -27,11 +29,11 @@ restSocket.get('localhost/api/initialData')
     //DATA is an array of objects returned from fetch promises
   })
   .catch(console.log);
-`
+```
 
 4. Complex usecase:
 
-`
+```
 const restSocket = new Telfone('ws://localhost/', onopen, onclose, onerror);
 
 restSocket.get('localhost/api/initialData')
@@ -49,5 +51,4 @@ restSocket.get('localhost/api/updateData')
     //DATA is an array of objects returned from fetch promises
   })
   .catch(console.log);
-`
-
+```
