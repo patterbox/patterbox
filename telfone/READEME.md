@@ -7,6 +7,7 @@ restufl response to a websocket event listener.
 # Getting Started
 
 1. Install Telfone:
+
 `
 npm install -save telfone
 `
@@ -16,6 +17,7 @@ npm install -save telfone
 `import Telfone from 'telfone'`
 
 3. Use Telfone:
+
 `
 const restSocket = new Telfone('ws://localhost/', onopen, onclose, onerror);
 
@@ -28,6 +30,7 @@ restSocket.get('localhost/api/initialData')
 `
 
 4. Complex usecase:
+
 `
 const restSocket = new Telfone('ws://localhost/', onopen, onclose, onerror);
 
