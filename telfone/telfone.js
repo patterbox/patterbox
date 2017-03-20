@@ -1,9 +1,16 @@
 /**
  * The Telfone RESTful socket
  * 
- * const Telfone = new Telfone('ws://localhost:5000/);
+ * const Telfone = new Telfone('ws://localhost:5000/', onopen, onclose, onerror);
+ * 
+ * Telfone.findSocketMessage((data) =>{
+ *  //RETURN THE MESSAGE FROM YOUR SOCKET DATA STRUCTURE
+ *  return JSON.parse(event.data).message
+ * })
  * 
  * Telfone.get('localhost:5000/api/initialData')
+ *  .get('localhost:5000/api/extraData', requestObject)
+ *  .post(url, requestObject)
  *  .on('connect')
  *  .then((data) =>{
  *    // DO SOMETHING WITH THE RETURNED DATA
@@ -12,35 +19,55 @@
  */
 
 class Telfone {
-  constructor(socketURL) {
-    this._init(socketURL)
+  constructor(...params) {
+    this._init(...params)
       ._openSocket();
   }
 
   __reset__() {
     delete this._requestURL;
     delete this._requestObject;
-
     return null;
   }
 
-  _init(socketURL) {
+  _init(socketURL, onopen, onclose, onerror) {
     this._setSocketURL = socketURL;
+    this._setOnopen = onopen;
+    this._setOnclose = onclose;
+    this._setOnerror = onerror;
     this._setSocket = new WebSocket(this._getSocketURL, 'echo-protocol');
-    this.__requests__ = {};
+    this._setRequests = {};
 
     return this;
   }
 
+  set _setRequests(storage) {
+    this.__requests__ = storage;
+    return null;
+  }
+
   set _setSocketURL(socketURL) {
     this._socketURL = socketURL;
+    return null;
+  }
 
+  set _setOnopen(onopen) {
+    this._onopen = onopen;
+    return null;
+  }
+
+  set _setOnclose(onclose) {
+    this._onclose = onclose;
+    return null;
+  }
+
+  set _setOnerror(onerror) {
+    this._onerror = onerror;
     return null;
   }
 
   set _setSocket(socket) {
     this._socket = socket;
-
     return null;
   }
 
@@ -55,26 +82,33 @@ class Telfone {
   }
 
   set _setRequestObject(requestObject) {
-    try {
-      this._requestObject = [
-        { 
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-          },
-          method: "POST",
-          data: JSON.stringify(requestObject) 
-        }
-      ];
-    } catch(e) {
-      console.log(e);
-    }
-
+    this._requestObject = requestObject;
     return null;
+  }
+
+  set _setFindSocketMessage(cb) {
+    this._findSocketMessage = cb;
+    return null;
+  }
+
+  get _getRequests() {
+    return this.__requests__;
   }
 
   get _getSocketURL() {
     return this._socketURL;
+  }
+
+  get _getOnopen() {
+    return this._onopen;
+  }
+
+  get _getOnclose() {
+    return this._onclose;
+  }
+
+  get _getOnerror() {
+    return this._onerror;
   }
 
   get _getRequestURLs() {
@@ -85,8 +119,12 @@ class Telfone {
     return this._requestObject;
   }
 
+  get _getFindSocketMessage() {
+    return this._findSocketMessage;
+  }
+
   _getFetch(message) {
-    const request = this.__requests__[message];
+    const request = this._getRequests[message];
     const urls = request.url;
     const requestObjects = request.requestObject;
 
@@ -105,26 +143,11 @@ class Telfone {
 
   _openSocket() {
     try {
-      this._socket.onerror = () =>{
-        console.log('Connection Error');
-      };
+      this._socket.onerror = this._getOnerror.bind(null, this._socket);
 
-      this._socket.onopen = (event) =>{
-        console.log('WebSocket Client Connected', event);
+      this._socket.onopen = this._getOnopen.bind(null, this._socket);
 
-        const sendNumber = () =>{
-          if(this._socket.readyState === this._socket.OPEN) {
-            var number = Math.round(Math.random() * 0xFFFFFF);
-            this._socket.send(number.toString());
-          }
-        }
-
-        sendNumber();
-      };
-
-      this._socket.onclose = () =>{
-        console.log('echo-protocol Client Closed');
-      };
+      this._socket.onclose = this._getOnclose.bind(null, this._socket);
     } catch(e) {
       console.log(e);
     }
@@ -132,9 +155,14 @@ class Telfone {
     return this;
   }
 
-  get(url, requestObject) {
+  findSocketMessage(cb) {
+    this._setFindSocketMessage = cb;
+    return null;
+  }
+
+  get(url, requestData) {
     this._setRequestURL = url;
-    this._setRequestObject = requestObject ? requestObject : null;
+    this._setRequestObject = requestData ? requestData : null;
 
     return this;
   }
@@ -147,7 +175,7 @@ class Telfone {
   }
 
   on(message) {
-    this.__requests__[message] = {
+    this._getRequests[message] = {
       url: this._getRequestURLs,
       requestObject: this._getRequestObjects
     }
@@ -156,7 +184,7 @@ class Telfone {
 
     return new Promise ((resolve, reject) =>{
       this._socket.onmessage = (event) =>{
-        const serverMessage = JSON.parse(event.data).message;
+        const serverMessage = this._getFindSocketMessage(event);
         resolve(this._getFetch(serverMessage));
       };
     });

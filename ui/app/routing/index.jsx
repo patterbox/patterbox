@@ -12,7 +12,32 @@ import Telfone from 'telfone';
 const store = createStore(rootReducer, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 const history = syncHistoryWithStore(browserHistory, store);
 
-const telfone = new Telfone('ws://localhost:5000/');
+const onopen = (socket, event) =>{
+  console.log('WebSocket Client Connected', event, this);
+
+  const sendNumber = () =>{
+    if(socket.readyState === socket.OPEN) {
+      var number = Math.round(Math.random() * 0xFFFFFF);
+      socket.send(number.toString());
+    }
+  }
+
+  sendNumber();
+};
+
+const onclose = () =>{
+  console.log('echo-protocol Client Closed');
+};
+
+const onerror = () =>{
+  console.log('Connection Error');
+};
+
+const telfone = new Telfone('ws://localhost:5000/', onopen, onclose, onerror);
+
+telfone.findSocketMessage((data) =>{
+  return JSON.parse(event.data).message;
+});
 
 telfone.get('http://localhost:5000/api/test3')
   .get('http://localhost:5000/api/test3')
