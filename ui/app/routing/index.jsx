@@ -39,8 +39,13 @@ telfone.findSocketMessage((data) =>{
   return JSON.parse(event.data).message;
 });
 
-telfone.get('http://localhost:5000/api/test3')
-  .get('http://localhost:5000/api/test3')
+const getobj = { method: 'GET',
+  mode: 'cors',
+  cache: 'default' 
+};
+
+telfone.get('http://localhost:5000/api/test3', getobj)
+  .get('http://localhost:5000/api/test3', getobj)
   .on('init')
   .then((fetch) =>{
     console.log("RESPONSES",fetch)

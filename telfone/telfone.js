@@ -30,38 +30,57 @@ class Telfone {
     return null;
   }
 
+  __validateType__(type, value, name) {
+    if (typeof value !== type || value === null) { 
+      throw new Error(`${name} not a/an ${type} or null value`); 
+    }
+
+    return null;
+  }
+
   _init(socketURL, onopen, onclose, onerror) {
-    this._setSocketURL = socketURL;
-    this._setOnopen = onopen;
-    this._setOnclose = onclose;
-    this._setOnerror = onerror;
-    this._setSocket = new WebSocket(this._getSocketURL, 'echo-protocol');
-    this._setRequests = {};
+    this.__setRequests__ = {};
+
+    try {
+      this._setSocketURL = socketURL;
+      
+      this._setOnopen = onopen;
+      this._setOnclose = onclose;
+      this._setOnerror = onerror;
+      
+      this._setSocket = new WebSocket(this._getSocketURL, 'echo-protocol');
+    } catch(e) {
+      console.log(e);
+    }
 
     return this;
   }
 
-  set _setRequests(storage) {
+  set __setRequests__(storage) {
     this.__requests__ = storage;
     return null;
   }
 
   set _setSocketURL(socketURL) {
+    this.__validateType__('string', socketURL, 'socket');
     this._socketURL = socketURL;
     return null;
   }
 
   set _setOnopen(onopen) {
+    this.__validateType__('function', onopen, 'onopen');
     this._onopen = onopen;
     return null;
   }
 
   set _setOnclose(onclose) {
+    this.__validateType__('function', onclose, 'onclose');
     this._onclose = onclose;
     return null;
   }
 
   set _setOnerror(onerror) {
+    this.__validateType__('function', onerror, 'onerror');
     this._onerror = onerror;
     return null;
   }
@@ -72,6 +91,8 @@ class Telfone {
   }
 
   set _setRequestURL(url) {
+    this.__validateType__('string', url, 'request url');
+    
     if (Array.isArray(this._requestURL)) {
       this._requestURL.push(url);
     } else {
@@ -82,11 +103,15 @@ class Telfone {
   }
 
   set _setRequestObject(requestObject) {
+    this.__validateType__('object', requestObject, 'request object');
+
     this._requestObject = requestObject;
     return null;
   }
 
   set _setFindSocketMessage(cb) {
+    this.__validateType__('function', cb, 'findSocketMessage');
+
     this._findSocketMessage = cb;
     return null;
   }
@@ -135,7 +160,7 @@ class Telfone {
       
       return Promise.all(requests);
     } catch(e) {
-      console.log(e);
+      throw new Error(e);
     }
 
     return this;
@@ -149,7 +174,7 @@ class Telfone {
 
       this._socket.onclose = this._getOnclose.bind(null, this._socket);
     } catch(e) {
-      console.log(e);
+      throw new Error(e);
     }
     
     return this;
