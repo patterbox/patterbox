@@ -6,50 +6,51 @@ import { syncHistoryWithStore } from 'react-router-redux';
 import { Router, Route, browserHistory, IndexRoute} from 'react-router';
 import rootReducer from '../reducers/index.js';
 import App from '../components/app/App.jsx';
-import ChatRoom from '../components/chatroom/chatroom.jsx';
-import Telfone from 'telfone';
+import ChatRoom from '../components/chatroom/Chatroom.jsx';
+import RestfulSocket from 'restfulsocket';
 
 const store = createStore(rootReducer, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 const history = syncHistoryWithStore(browserHistory, store);
 
-const onopen = (socket, event) =>{
-  console.log('WebSocket Client Connected', event, this);
+// const onopen = (event) =>{
+//   console.log('WebSocket Client Connected');
 
-  const sendNumber = () =>{
-    if(socket.readyState === socket.OPEN) {
-      var number = Math.round(Math.random() * 0xFFFFFF);
-      socket.send(number.toString());
-    }
-  }
+//   const sendNumber = () =>{
+//     if(event.readyState === event.OPEN) {
+//       var number = Math.round(Math.random() * 0xFFFFFF);
+//       restfulSocket.socket.send(number.toString());
+//     }
+//   }
 
-  sendNumber();
-};
+//   sendNumber();
+// };
 
-const onclose = () =>{
-  console.log('echo-protocol Client Closed');
-};
+// const onclose = (event) =>{
+//   console.log('Client Closed', event);
+// };
 
-const onerror = () =>{
-  console.log('Connection Error');
-};
+// const onerror = (error) =>{
+//   console.log('Connection Error', error);
+// };
 
-const telfone = new Telfone('ws://localhost:5000/', onopen, onclose, onerror);
+// const restfulSocket = new RestfulSocket('ws://localhost:5000/', onopen, onclose, onerror);
 
-telfone.findSocketMessage((data) =>{
-  return JSON.parse(event.data).message;
-});
+// restfulSocket.findSocketMessage((data) =>{
+//   return JSON.parse(event.data).message;
+// });
 
-const getobj = { method: 'GET',
-  mode: 'cors',
-  cache: 'default' 
-};
+// const getobj = { 
+//   method: 'GET',
+//   mode: 'cors',
+//   cache: 'default' 
+// };
 
-telfone.get('http://localhost:5000/api/test3', getobj)
-  .get('http://localhost:5000/api/test3', getobj)
-  .on('init')
-  .then((fetch) =>{
-    console.log("RESPONSES",fetch)
-  }).catch(console.log);
+// restfulSocket.get('http://localhost:5000/api/test3', getobj)
+//   .get('http://localhost:5000/api/test3', getobj)
+//   .on('init')
+//   .then((fetch) =>{
+//     console.log("RESPONSES",fetch)
+//   }).catch(console.log);
 
 render((
   <Provider store={store}>
