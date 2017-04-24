@@ -1,5 +1,5 @@
 import React from 'react';
-import { Navbar, Nav, NavItem } from 'react-bootstrap';
+import { Navbar, Nav, NavItem, NavDropdown, MenuItem } from 'react-bootstrap';
 
 class App extends React.Component {
   constructor() {
@@ -18,25 +18,28 @@ class App extends React.Component {
     return (
       <div>
         <header>
-          {/*
           <Navbar>
-            <Navbar.brand>
-              <a href='/'>PatterBox</a>
-            </Navbar.brand>
+            <Navbar.Header>
+              <Navbar.Brand>
+                <a href="#">PatterBox</a>
+              </Navbar.Brand>
+            </Navbar.Header>
             <Nav>
-              <NavItem eventKey={1} href="/chatroom">ChatRoom</NavItem>
+              <NavItem eventKey={1} href="/">Home</NavItem>
+              <NavItem eventKey={2} href="#">Chatrooms</NavItem>
+              <NavItem eventKey={2} href="#">Profile</NavItem>
+              <NavItem eventKey={2} href="#">History</NavItem>
             </Nav>
           </Navbar>
-          */}
         </header>
         <section className="container-fluid">
-          {this.props.children ? React.cloneElement(this.props.children, {}) 
+          { this.props.children ? 
+            React.cloneElement(this.props.children, {}) 
           : 
-          (
             <div>
               Welcome Page
             </div>
-          )}
+          }
         </section>
       </div>
     );

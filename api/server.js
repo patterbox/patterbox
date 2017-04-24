@@ -15,5 +15,5 @@ const server = app.listen(app.get('port'), () =>{
 
 module.exports = server;
 
- require('./socket/index');
+require('./socket/index');
 
